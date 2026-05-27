@@ -1,46 +1,62 @@
 
 
-extrato = 3000
-max_retiradas=0
-cont = 0
+Saldo = 3000
+calc_saques=0
+quantidade_depositos = 0
 Depositos = []
-while True:
-    def retirada():
-        global extrato
-        global max_retiradas
-        limite_saque = 500
-        saque = float(input("Digite um Valor de retirada: "))
-        if saque > extrato:
-            print(f"Saldo insuficiente\nValor na conta: {extrato}")
-        elif saque > limite_saque:
-            print(f"O valor solicitado R${saque} é muito alto, apenas R${limite_saque} por saque")
-        else:
-            max_retiradas += 1
-            extrato -= saque
-            print(f"Valor R${saque:.2f} Retirado com Sucesso\nSeu saldo é de {extrato:.2f}")
 
-    def deposito():
-        global extrato
-        valor = float(input("Digite um valor para deposito: "))
-        extrato += valor
-        print(f"Deposito: {valor:.2f}\nValor na conta: {extrato:.2f}")
-        return valor
 
-    opitions = input("1-Saque 2-Depósito 3- Para ver o extrato: ").strip()
-    if max_retiradas>=3:
-       print("Muitas retiradas, Sistema encerrado")
-       break
-    elif opitions == "1":
-        retirada()
+def retirada():
+    global Saldo
+    global calc_saques
+    limite_saque = 500
+    saque = float(input("Digite um Valor de retirada: "))
 
-    elif opitions == "2":
-        valor_depositado = deposito()
-        Depositos.append(valor_depositado)
-        cont +=1
-    elif opitions == "3":
-        print(f"Seu extrato: R${extrato}\nNúmero de Depositos: {cont}\nValores depositados:{Depositos}")
+    if saque > Saldo:
+        print(f"Saldo insuficiente\nValor na conta: {Saldo}")
+    elif saque <= 0:
+        print("Saque Inválido")
+    elif saque > limite_saque:
+        print(f"O valor solicitado R${saque} é muito alto, apenas R${limite_saque} por saque")
     else:
-       print("Opção invalida")
+        calc_saques += 1
+        Saldo -= saque
+        print(f"Valor R${saque:.2f} Retirado com Sucesso\nSeu saldo é de {Saldo:.2f}")
+
+def deposito(valor):
+    global Saldo
+    Saldo += valor
+    print(f"Depósito: {valor:.2f}\nValor na conta: {Saldo:.2f}")
+    return valor
+
+
+
+while True:
+    options = input("[S]-Saque [D]-Depósito [E]-extrato [Q]-Sair: ").strip().upper()
+    match options:
+        case "S":
+            if calc_saques >= 3:
+                print("Muitas retiradas, Sistema encerrado")
+                break
+            retirada()
+        case "D":
+            valor_saque = float(input("Digite um valor para depósito: "))
+            if valor_saque > 0:
+                valor_depositado = deposito(valor_saque)
+                Depositos.append(valor_depositado)
+                quantidade_depositos += 1
+            else:
+                print("Depósito invalido")
+        case "E":
+            print(
+                f"Seu Saldo: R${Saldo}\nNúmero de Depósitos: {quantidade_depositos}\nValores depositados:R${Depositos}")
+        case "Q":
+            print("Sistema encerrado")
+            break
+        case _:
+            print("Opção invalida")
+
+
 
 
 
